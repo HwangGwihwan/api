@@ -10,16 +10,22 @@ import com.sakila.api.entity.AddressEntity;
 import com.sakila.api.entity.CityEntity;
 import com.sakila.api.repository.AddressRepository;
 import com.sakila.api.repository.CityRepository;
+import com.sakila.api.repository.CustomerRepository;
+import com.sakila.api.repository.StoreRepository;
 
 @Service
 @Transactional
 public class AddressService {
 	private AddressRepository addressRepository;
 	private CityRepository cityRepository;
+	private CustomerRepository customerRepository;
+	private StoreRepository storeRepository;
 
-	public AddressService(AddressRepository addressRepository, CityRepository cityRepository) {
+	public AddressService(AddressRepository addressRepository, CityRepository cityRepository, CustomerRepository customerRepository, StoreRepository storeRepository) {
 		this.addressRepository = addressRepository;
 		this.cityRepository = cityRepository;
+		this.customerRepository = customerRepository;
+		this.storeRepository = storeRepository;
 	}
 	
 	public List<AddressEntity> findAll() {
@@ -48,6 +54,16 @@ public class AddressService {
 		updateAddress.setDistrict(addressDto.getDistrict());
 		updateAddress.setPostalCode(addressDto.getPostalCode());
 		updateAddress.setPhone(addressDto.getPhone());
+		
+		CityEntity updateCity = cityRepository.findById(addressDto.getCityId()).orElse(null);
+		updateAddress.setCityEntity(updateCity);
 	}
 	
+	public boolean delete(int addressId) {
+		if (customerRepository.countByAddressEntity(addressRepository.findById(addressId).orElse(null)) == 0 && storeRepository.countByAddressEntity(addressRepository.findById(addressId).orElse(null)) == 0) {
+			addressRepository.deleteById(addressId);
+			return true;
+		}
+		return false;
+	}
 }

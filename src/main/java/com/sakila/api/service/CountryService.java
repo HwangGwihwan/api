@@ -26,6 +26,10 @@ public class CountryService {
 		return countryRepository.findAll();
 	}
 	
+	public CountryEntity findById(int countryId) {
+		return countryRepository.findById(countryId).orElse(null);
+	}
+	
 	// CountryEntity 입력
 	public void save(CountryDto countryDto) {
 		CountryEntity saveCountry = new CountryEntity();
