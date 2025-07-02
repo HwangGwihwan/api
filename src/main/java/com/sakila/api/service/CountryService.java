@@ -1,12 +1,14 @@
 package com.sakila.api.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sakila.api.dto.CountryDto;
 import com.sakila.api.entity.CountryEntity;
+import com.sakila.api.entity.CountryMapping;
 import com.sakila.api.repository.CityRepository;
 import com.sakila.api.repository.CountryRepository;
 
@@ -22,8 +24,13 @@ public class CountryService {
 		this.cityRepository = cityRepository;
 	}
 	
-	public List<CountryEntity> findAll() {
-		return countryRepository.findAll();
+	public Page<CountryMapping> findAll(int currentPage) {
+		final int pageSize = 10;
+		int pageNumber = currentPage - 1;
+		Sort sort = Sort.by("countryId").ascending();
+		
+		PageRequest pagerable = PageRequest.of(pageNumber, pageSize, sort);
+		return countryRepository.findAllBy(pagerable);
 	}
 	
 	public CountryEntity findById(int countryId) {

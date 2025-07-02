@@ -1,12 +1,14 @@
 package com.sakila.api.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sakila.api.dto.CityDto;
 import com.sakila.api.entity.CityEntity;
+import com.sakila.api.entity.CityMapping;
 import com.sakila.api.entity.CountryEntity;
 import com.sakila.api.repository.AddressRepository;
 import com.sakila.api.repository.CityRepository;
@@ -25,8 +27,17 @@ public class CityService {
 		this.addressRepository = addressRepository;
 	}
 	
-	public List<CityEntity> findAll() {
-		return cityRepository.findAll();
+	public Page<CityMapping> findAll(int currentPage) {
+		final int pageSize = 10;
+		int pageNumber = currentPage - 1;
+		Sort sort = Sort.by("cityId").ascending();
+		
+		PageRequest pagerable = PageRequest.of(pageNumber, pageSize, sort);
+		return cityRepository.findAllBy(pagerable);
+	}
+	
+	public CityEntity findById(int cityId) {
+		return cityRepository.findById(cityId).orElse(null);
 	}
 	
 	public void save(CityDto cityDto) {

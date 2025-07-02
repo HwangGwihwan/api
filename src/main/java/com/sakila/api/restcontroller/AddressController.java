@@ -1,9 +1,9 @@
 package com.sakila.api.restcontroller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sakila.api.dto.AddressDto;
 import com.sakila.api.entity.AddressEntity;
+import com.sakila.api.entity.AddressMapping;
 import com.sakila.api.service.AddressService;
 
 @RestController
+@CrossOrigin
 public class AddressController {
 	private AddressService addressService;
 
@@ -24,9 +26,14 @@ public class AddressController {
 		this.addressService = addressService;
 	}
 	
-	@GetMapping("/address")
-	public ResponseEntity<List<AddressEntity>> address() {
-		return new ResponseEntity<List<AddressEntity>>(addressService.findAll(), HttpStatus.OK);
+	@GetMapping("/addressList/{currentPage}")
+	public ResponseEntity<Page<AddressMapping>> address(@PathVariable int currentPage) {
+		return new ResponseEntity<Page<AddressMapping>>(addressService.findAll(currentPage), HttpStatus.OK);
+	}
+	
+	@GetMapping("/address/{addressId}")
+	public ResponseEntity<AddressEntity> addressOne(@PathVariable int addressId) {
+		return new ResponseEntity<AddressEntity>(addressService.findById(addressId), HttpStatus.OK);
 	}
 	
 	// 입력
@@ -40,7 +47,7 @@ public class AddressController {
 	@PatchMapping("/address")
 	public ResponseEntity<String> updateAddress(@RequestBody AddressDto addressDto) {
 		addressService.update(addressDto);
-		return new ResponseEntity<String>("입력성공", HttpStatus.OK);
+		return new ResponseEntity<String>("수정성공", HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/address/{addressId}")
