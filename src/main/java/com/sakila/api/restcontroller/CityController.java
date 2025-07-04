@@ -57,7 +57,7 @@ public class CityController {
 			return new ResponseEntity<String>("삭제성공", HttpStatus.OK);
 		}
 		
-		return new ResponseEntity<String>("삭제실패", HttpStatus.OK);
+		return new ResponseEntity<String>("삭제실패", HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
 }

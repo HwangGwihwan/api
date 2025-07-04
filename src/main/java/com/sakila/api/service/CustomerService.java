@@ -31,7 +31,7 @@ public class CustomerService {
 	public Page<CustomerMapping> findAll(int currentPage) {
 		final int pageSize = 10;
 		int pageNumber = currentPage - 1;
-		Sort sort = Sort.by("customerId").ascending();
+		Sort sort = Sort.by("customerId").descending();
 		
 		PageRequest pagerable = PageRequest.of(pageNumber, pageSize, sort);
 		

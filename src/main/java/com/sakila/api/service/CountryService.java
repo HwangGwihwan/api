@@ -27,7 +27,7 @@ public class CountryService {
 	public Page<CountryMapping> findAll(int currentPage) {
 		final int pageSize = 10;
 		int pageNumber = currentPage - 1;
-		Sort sort = Sort.by("countryId").ascending();
+		Sort sort = Sort.by("countryId").descending();
 		
 		PageRequest pagerable = PageRequest.of(pageNumber, pageSize, sort);
 		return countryRepository.findAllBy(pagerable);
